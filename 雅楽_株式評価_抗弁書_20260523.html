@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>破産直前の株式譲渡に関する価値評価の争点</title>
+<style>
+  /* リセットと基本設定 
+    最小フォントサイズ0.95rem以上を厳守
+  */
+  :root {
+    --color-bg: #f8fafc;
+    --color-text-main: #1e293b;
+    --color-text-muted: #475569;
+    --color-white: #ffffff;
+    
+    --color-primary: #0f172a; /* ダークネイビー */
+    --color-accent: #2563eb; /* ブルー */
+    
+    --color-trustee: #dc2626; /* 赤系（管財人） */
+    --color-trustee-bg: #fef2f2;
+    --color-trustee-border: #fca5a5;
+    
+    --color-buyer: #0284c7; /* 青系（譲受人） */
+    --color-buyer-bg: #f0f9ff;
+    --color-buyer-border: #7dd3fc;
+    
+    --color-warning: #ea580c; /* オレンジ系（警告・重要） */
+    --color-warning-bg: #fff7ed;
+    
+    --color-neutral: #10b981; /* 緑系（中立・客観） */
+    --color-neutral-bg: #ecfdf5;
+    
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px; /* 1rem = 16px */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    line-height: 1.6;
+    /* body自体のフォントサイズも1rem(16px)とし、これ以下にならないようにする */
+    font-size: 1rem; 
+    padding: 2rem 1rem;
+  }
+
+  /* フォントサイズの厳格管理（最小0.95rem = 15.2px） */
+  .text-xs, .text-sm { font-size: 0.95rem; }
+  .text-base { font-size: 1rem; }
+  .text-lg { font-size: 1.125rem; }
+  .text-xl { font-size: 1.25rem; font-weight: bold; }
+  .text-2xl { font-size: 1.5rem; font-weight: bold; }
+  .text-3xl { font-size: 1.875rem; font-weight: bold; }
+  .text-4xl { font-size: 2.25rem; font-weight: bold; }
+
+  /* コンテナ */
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* セクション共通 */
+  .section-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    border-bottom: 3px solid var(--color-accent);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sub-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 1.5rem 0 1rem 0;
+    color: var(--color-text-main);
+    border-left: 4px solid var(--color-accent);
+    padding-left: 0.75rem;
+  }
+
+  /* トップバナー */
+  .hero-banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .hero-banner .core-question {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 1.25rem;
+  }
+  .highlight-text {
+    color: #fbbf24; /* ゴールド */
+    font-weight: bold;
+  }
+
+  /* グリッドレイアウト */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+  /* フレックスレイアウト */
+  .flex-col { display: flex; flex-direction: column; gap: 1rem; }
+  .flex-row { display: flex; flex-direction: row; gap: 1rem; align-items: flex-start; }
+  .flex-center { display: flex; justify-content: center; align-items: center; }
+
+  /* 対立構造UI */
+  .vs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .vs-card {
+    flex: 1;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 2px solid;
+  }
+  .vs-card.trustee {
+    background-color: var(--color-trustee-bg);
+    border-color: var(--color-trustee-border);
+  }
+  .vs-card.buyer {
+    background-color: var(--color-buyer-bg);
+    border-color: var(--color-buyer-border);
+  }
+  .vs-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-text-muted);
+    padding: 0 1rem;
+  }
+
+  /* 時系列フロー */
+  .timeline-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .timeline-step {
+    flex: 1;
+    min-width: 180px;
+    background-color: var(--color-bg);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .timeline-step::after {
+    content: '▶';
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #cbd5e1;
+    font-size: 1.5rem;
+    z-index: 10;
+  }
+  .timeline-step:last-child::after {
+    display: none;
+  }
+  .step-number {
+    background-color: var(--color-primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .step-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+  .step-content ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+  }
+
+  /* カード型リスト */
+  .info-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+  }
+  .info-card-title {
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  /* 超重要アラート */
+  .alert-critical {
+    background-color: #fff1f2;
+    border: 3px solid #f43f5e;
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .alert-critical-title {
+    color: #e11d48;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* 比較表 */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background-color: var(--color-white);
+  }
+  .comparison-table th, .comparison-table td {
+    border: 1px solid #cbd5e1;
+    padding: 1rem;
+    text-align: left;
+    font-size: 1rem;
+  }
+  .comparison-table th {
+    background-color: #f1f5f9;
+    font-weight: bold;
+    color: var(--color-primary);
+  }
+  .comparison-table thead th {
+    background-color: var(--color-primary);
+    color: white;
+    text-align: center;
+  }
+  .comparison-table .highlight-col {
+    background-color: #fffbeb; /* 薄い黄色 */
+    font-weight: bold;
+  }
+
+  /* 図解：全体 vs 一部 */
+  .visual-comparison {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin: 2rem 0;
+    background-color: #f8fafc;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    border: 1px dashed #cbd5e1;
+  }
+  .vc-box {
+    flex: 1;
+    background-color: white;
+    border: 2px solid;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+  }
+  .vc-whole { border-color: var(--color-neutral); }
+  .vc-part { border-color: var(--color-warning); }
+  .vc-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+  }
+  .vc-whole .vc-title { color: var(--color-neutral); }
+  .vc-part .vc-title { color: var(--color-warning); }
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .tag {
+    background-color: #f1f5f9;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+  }
+  .tag.important {
+    background-color: #fee2e2;
+    color: #dc2626;
+    font-weight: bold;
+    border-color: #fca5a5;
+  }
+  .vc-arrow {
+    font-size: 2rem;
+    color: #94a3b8;
+    font-weight: bold;
+  }
+
+  /* バランス図（天秤） */
+  .balance-scale {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    margin: 2rem 0;
+  }
+  .balance-side {
+    flex: 1;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+  }
+  .balance-side.buyer {
+    background-color: var(--color-buyer-bg);
+    border-top: 4px solid var(--color-buyer);
+  }
+  .balance-side.trustee {
+    background-color: var(--color-trustee-bg);
+    border-top: 4px solid var(--color-trustee);
+  }
+  .balance-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1.125rem;
+  }
+  .balance-list {
+    list-style-type: none;
+  }
+  .balance-list li {
+    background-color: rgba(255,255,255,0.7);
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+  }
+  .balance-list li::before {
+    content: '✓';
+    margin-right: 0.5rem;
+    font-weight: bold;
+  }
+  .balance-side.buyer .balance-list li::before { color: var(--color-buyer); }
+  .balance-side.trustee .balance-list li::before { color: var(--color-trustee); }
+  .balance-vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #cbd5e1;
+  }
+
+  /* 結論ボックス */
+  .conclusion-box {
+    background: linear-gradient(to right, #1e293b, #0f172a);
+    color: white;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .conclusion-box h2 {
+    color: #f8fafc;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ユーティリティ */
+  .text-trustee { color: var(--color-trustee); }
+  .text-buyer { color: var(--color-buyer); }
+  .text-warning { color: var(--color-warning); }
+  .font-bold { font-weight: bold; }
+  .mb-1 { margin-bottom: 0.25rem; }
+  .mb-2 { margin-bottom: 0.5rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mt-4 { margin-top: 1rem; }
+  .p-4 { padding: 1rem; }
+  
+  ul.custom-list {
+    list-style: none;
+  }
+  ul.custom-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  ul.custom-list li::before {
+    content: '■';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    top: 0.2rem;
+  }
+
+  /* レスポンシブ対応 */
+  @media (max-width: 992px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .timeline-container { flex-direction: column; }
+    .timeline-step::after {
+      content: '▼';
+      right: auto;
+      left: 50%;
+      bottom: -15px;
+      top: auto;
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .vs-container { flex-direction: column; }
+    .vs-mark { padding: 1rem 0; transform: rotate(90deg); }
+    .visual-comparison { flex-direction: column; }
+    .vc-arrow { transform: rotate(90deg); }
+    .balance-scale { flex-direction: column; }
+    .balance-vs { padding: 1rem 0; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="main-container">
+
+  <!-- ==========================================
+       トップバナー
+  ========================================== -->
+  <div class="hero-banner">
+    <div class="text-xl mb-2" style="color: #cbd5e1;">本件の全体像（最重要ポイント）</div>
+    <div class="text-3xl mb-4">本件は、単なる「株の売買」の話ではありません。</div>
+    <div class="core-question">
+      <p class="mb-2">本質は、<br><span class="text-2xl highlight-text">「破産直前に行われた株式譲渡が、不当に安かったのではないか」</span><br>という争いです。</p>
+      <div style="margin: 1rem 0; border-top: 1px dashed rgba(255,255,255,0.3);"></div>
+      <p>そして最大の争点は、<br><span class="text-2xl highlight-text">「本当にその会社の価値は低かったのか」</span><br>です。</p>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       1. 本件の構造（全体像）
+  ========================================== -->
+  <div class="section-card">
+    <h2 class="section-title">1. 本件の構造（全体像）</h2>
+    
+    <div class="sub-title">登場人物と立場</div>
+    <div class="vs-container">
+      <div class="vs-card trustee">
+        <div class="text-xl text-trustee font-bold mb-2">破産管財人</div>
+        <p class="text-lg">「安すぎる。<br>不当に財産を移したのでは？」</p>
+      </div>
+      <div class="vs-mark">VS</div>
+      <div class="vs-card buyer">
+        <div class="text-xl text-buyer font-bold mb-2">株式譲受人側</div>
+        <p class="text-lg">「会社価値は低かった。<br>価格は妥当」</p>
+      </div>
+    </div>
+
+    <div class="sub-title">時系列</div>
+    <div class="timeline-container">
+      <div class="timeline-step">
+        <div class="step-number">①</div>
+        <div class="step-title">会社が経営悪化</div>
+        <div class="step-content">
+          <ul>
+            <li>赤字</li>
+            <li>人手不足</li>
+            <li>設備老朽化</li>
+            <li>税務未整備など</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">②</div>
+        <div class="step-title">株式譲渡</div>
+        <div class="step-content">
+          <p class="mb-1 text-sm">会社株式が低額で譲渡。</p>
+          <div class="font-bold text-base" style="color:var(--color-primary);">本件では：<br><span class="text-lg">約250万円</span></div>
+          <p class="text-sm">とされている。</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">③</div>
+        <div class="step-title">その後、会社破産</div>
+        <div class="step-content">
+          <p class="text-sm">ここで<span class="text-trustee font-bold">破産管財人</span>が問題視。</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">④</div>
+        <div class="step-title text-trustee">管財人の主張</div>
+        <div class="step-content">
+          <p class="mb-1 text-sm font-bold">「本来もっと高い価値があった」</p>
+          <p class="text-sm">つまり：</p>
+          <ul>
+            <li>債権者に不利益</li>
+            <li>財産逃し</li>
+            <li>不当に安い譲渡</li>
+          </ul>
+          <p class="text-sm">ではないかという主張。</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">⑤</div>
+        <div class="step-title text-buyer">譲受人側の反論</div>
+        <div class="step-content">
+          <p class="text-sm mb-1">弁護士報告書を提出。内容は：</p>
+          <p class="text-sm font-bold">「そもそも会社価値は低かった」</p>
+          <p class="text-sm">という反論。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2 & 3. 報告書の主張と良い点
+  ========================================== -->
+  <div class="grid-2">
+    <!-- 2. 報告書の主張 -->
+    <div class="section-card">
+      <h2 class="section-title">2. 報告書の主張（超要約）</h2>
+      
+      <div class="info-card mb-4" style="border-left: 4px solid var(--color-buyer);">
+        <div class="info-card-title text-buyer">報告書の基本ロジック：「会社価値は低い」</div>
+        <p class="font-bold text-sm mb-1 mt-2">【理由】</p>
+        <ul class="custom-list">
+          <li>赤字</li>
+          <li>人手不足</li>
+          <li>修繕必要</li>
+          <li>設備劣化</li>
+          <li>税務不透明</li>
+          <li>利益期待低い</li>
+        </ul>
+      </div>
+
+      <div class="info-card mb-4">
+        <div class="info-card-title">「だからDCF等は使わない」</div>
+        <p class="text-sm mb-1">つまり：</p>
+        <ul class="custom-list">
+          <li>将来利益を前提にしない</li>
+          <li>のれん価値なし</li>
+        </ul>
+        <p class="text-sm mt-2">という整理。</p>
+      </div>
+
+      <div class="info-card mb-4">
+        <div class="info-card-title">「固定資産だけ簡便評価」</div>
+        <p class="text-sm mb-1">主に：</p>
+        <div class="tag-container" style="justify-content: flex-start; margin-bottom: 0.5rem;">
+          <span class="tag">建物</span><span class="tag">内装</span><span class="tag">設備</span>
+        </div>
+        <p class="text-sm">だけを低額評価。</p>
+      </div>
+
+      <div class="p-4 rounded font-bold text-center text-lg" style="background-color: var(--color-buyer-bg); border: 2px solid var(--color-buyer-border);">
+        【結論】<br>「250万円は妥当」というストーリー。
+      </div>
+    </div>
+
+    <!-- 3. この報告書の“良い点” -->
+    <div class="section-card">
+      <h2 class="section-title">3. この報告書の“良い点”</h2>
+      <p class="mb-4 text-sm">※この報告書にも一定の合理性はあります。</p>
+
+      <div class="info-card mb-4" style="border-left: 4px solid var(--color-neutral);">
+        <div class="info-card-title">3-1. 「低額＝違法」ではない（これは重要）</div>
+        <p class="text-sm mb-1">中小企業M&Aでは実際に：</p>
+        <ul class="custom-list">
+          <li>1円譲渡</li>
+          <li>債務超過譲渡</li>
+          <li>無償譲渡</li>
+        </ul>
+        <p class="text-sm mt-2">は普通にあります。特に：</p>
+        <div class="tag-container" style="justify-content: flex-start; margin-top: 0.5rem;">
+          <span class="tag">赤字</span><span class="tag">破綻接近</span><span class="tag">小規模飲食</span>
+        </div>
+        <p class="text-sm mt-2">では珍しくない。</p>
+      </div>
+
+      <div class="info-card mb-4" style="border-left: 4px solid var(--color-neutral);">
+        <div class="info-card-title">3-2. DCFを使わないのも一定合理性</div>
+        <p class="text-sm mb-1">DCF（将来利益法）は、<strong>将来予測</strong>と<strong>安定利益</strong>が必要。</p>
+        <p class="text-sm mt-2">しかし本件のように：</p>
+        <div class="tag-container" style="justify-content: flex-start; margin: 0.5rem 0;">
+          <span class="tag">財務不透明</span><span class="tag">継続性疑義</span><span class="tag">赤字</span>
+        </div>
+        <p class="text-sm">だと、DCFが難しいことは実務上普通。</p>
+      </div>
+
+      <div class="info-card" style="border-left: 4px solid var(--color-neutral);">
+        <div class="info-card-title">3-3. 飲食店特有リスクも一定合理性</div>
+        <p class="text-sm mb-1">飲食店は：</p>
+        <ul class="custom-list">
+          <li>内装劣化</li>
+          <li>設備消耗</li>
+          <li>原状回復</li>
+          <li>人手依存</li>
+        </ul>
+        <p class="text-sm mt-2">が強い。そのため、<br><strong>帳簿価値より実価値が低い</strong><br>ことは実務上よくある。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       4, 5, 6. 最大の問題点と違い
+  ========================================== -->
+  <div class="alert-critical">
+    <div class="text-center mb-2 font-bold" style="color: #9f1239; font-size: 1.25rem;">4. しかし、本報告書の最大問題</div>
+    <div class="alert-critical-title text-3xl">
+      「株式譲渡」なのに<br>「事業譲渡」のように評価している
+    </div>
+    <div class="text-center font-bold text-xl mt-4" style="color: #be123c;">
+      ここが最大争点。
+    </div>
+
+    <div class="section-card mt-4" style="border: none; box-shadow: none; background: rgba(255,255,255,0.8);">
+      <h3 class="sub-title" style="margin-top:0;">5. 株式譲渡と事業譲渡の違い（超重要）</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>株式譲渡（本件の形式）</th>
+            <th>事業譲渡（報告書の目線）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-bold">売るもの</td>
+            <td class="highlight-col">会社そのもの</td>
+            <td>事業の一部</td>
+          </tr>
+          <tr>
+            <td class="font-bold">負債</td>
+            <td class="highlight-col">引継ぐ</td>
+            <td>通常引継がない</td>
+          </tr>
+          <tr>
+            <td class="font-bold">契約</td>
+            <td class="highlight-col">包括承継</td>
+            <td>個別承継</td>
+          </tr>
+          <tr>
+            <td class="font-bold">従業員</td>
+            <td class="highlight-col">原則そのまま</td>
+            <td>再契約必要</td>
+          </tr>
+          <tr>
+            <td class="font-bold">リスク</td>
+            <td class="highlight-col">簿外債務含め全部</td>
+            <td>限定可能</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="p-4 rounded" style="background-color: #fee2e2; border-left: 4px solid #ef4444;">
+        <div class="font-bold mb-2">本件の問題</div>
+        <p class="text-base">実際には：<strong>「株式譲渡」</strong><br>なのに、報告書は：<strong>「設備だけを引き継ぐ事業譲渡」</strong><br>のような発想で評価している。</p>
+      </div>
+
+      <h3 class="sub-title">6. なぜこれが問題か</h3>
+      <div class="visual-comparison">
+        <div class="vc-box vc-whole">
+          <div class="vc-title">株式譲渡で本来評価すべき<br>【会社全体】</div>
+          <div class="tag-container">
+            <span class="tag">現預金</span>
+            <span class="tag">売掛金</span>
+            <span class="tag">在庫</span>
+            <span class="tag">借金</span>
+            <span class="tag">税金</span>
+            <span class="tag">契約</span>
+            <span class="tag important">顧客</span>
+            <span class="tag important">営業価値</span>
+          </div>
+          <p class="text-sm text-center mt-4">全部含める必要がある</p>
+        </div>
+        
+        <div class="vc-arrow">しかし<br>報告書は<br>➡</div>
+        
+        <div class="vc-box vc-part">
+          <div class="vc-title">主に評価された<br>【一部のみ】</div>
+          <div class="tag-container">
+            <span class="tag">建物</span>
+            <span class="tag">設備</span>
+            <span class="tag">構築物</span>
+          </div>
+          <p class="text-sm text-center mt-4">だけを評価。</p>
+        </div>
+      </div>
+      <div class="text-center text-xl font-bold text-warning">
+        つまり：「会社全体価値」になっていない可能性がある。
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       7 & 8. 反論と弱点
+  ========================================== -->
+  <div class="section-card">
+    <h2 class="section-title">7. 破産管財人が強く主張しそうな点</h2>
+    
+    <div class="grid-2">
+      <div class="info-card" style="border-top: 4px solid var(--color-trustee);">
+        <div class="info-card-title text-trustee">7-1. 「営業価値がある」</div>
+        <p class="text-sm mb-1 font-bold">特に重要。もし以下があると危険：</p>
+        <ul class="custom-list">
+          <li>営業継続</li>
+          <li>店舗継続</li>
+          <li>顧客継続</li>
+          <li>従業員継続</li>
+          <li>売上継続</li>
+        </ul>
+        <p class="text-sm mt-2 font-bold" style="background: #fee2e2; padding: 0.5rem; display: inline-block;">すると：「価値ゼロではない」と見られやすい。</p>
+      </div>
+
+      <div class="info-card" style="border-top: 4px solid var(--color-trustee);">
+        <div class="info-card-title text-trustee">7-2. 「居抜き価値がある」</div>
+        <p class="text-sm mb-1 font-bold">飲食店では非常に重要。例えば：</p>
+        <div class="tag-container" style="justify-content: flex-start; margin-bottom: 0.5rem;">
+          <span class="tag">ダクト</span><span class="tag">空調</span><span class="tag">厨房</span><span class="tag">給排水</span><span class="tag">内装</span>
+        </div>
+        <p class="text-sm mb-2">は開業コストが高い。</p>
+        <p class="text-sm font-bold" style="background: #fee2e2; padding: 0.5rem; display: inline-block;">そのため：赤字でも価値が付くことが多い。</p>
+      </div>
+
+      <div class="info-card" style="border-top: 4px solid var(--color-trustee);">
+        <div class="info-card-title text-trustee">7-3. 「本当に無価値なら、なぜ買った？」</div>
+        <p class="text-sm mb-1 font-bold">裁判所がかなり気にする論点。</p>
+        <p class="text-sm mb-1">つまり：</p>
+        <ul class="custom-list">
+          <li>なぜ譲受した？</li>
+          <li>利益期待は？</li>
+          <li>継続意図は？</li>
+        </ul>
+        <p class="text-sm mt-2 font-bold">が重要。</p>
+      </div>
+
+      <div class="info-card" style="border-top: 4px solid var(--color-trustee);">
+        <div class="info-card-title text-trustee">7-4. 「関係者取引では？」</div>
+        <p class="text-sm mb-1">もし：</p>
+        <ul class="custom-list">
+          <li>親族</li>
+          <li>元役員</li>
+          <li>実質同一支配</li>
+        </ul>
+        <p class="text-sm mt-2">なら危険。</p>
+        <p class="text-sm font-bold" style="background: #fee2e2; padding: 0.5rem; display: inline-block;">その場合：市場価格ではないと見られやすい。</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">8. 報告書の弱点（整理）</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>弱点</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="font-bold text-warning">評価対象混在</td>
+          <td>株式価値と事業価値が混在</td>
+        </tr>
+        <tr>
+          <td class="font-bold text-warning">純資産分析不足</td>
+          <td>BS全体分析不足</td>
+        </tr>
+        <tr>
+          <td class="font-bold text-warning">利益分析不足</td>
+          <td>EBITDA等なし</td>
+        </tr>
+        <tr>
+          <td class="font-bold text-warning">客観査定不足</td>
+          <td>第三者査定なし</td>
+        </tr>
+        <tr>
+          <td class="font-bold text-warning">継続価値分析不足</td>
+          <td>営業継続実態分析不足</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==========================================
+       9 & 10 & 11. 本来の分析と実務感覚
+  ========================================== -->
+  <div class="section-card">
+    <h2 class="section-title">9. 本来必要だった分析（最低限必要だったもの）</h2>
+    <div class="grid-4">
+      <div class="info-card">
+        <div class="info-card-title">① 時価BS</div>
+        <table style="width:100%; font-size: 0.95rem; border-collapse: collapse;">
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">現預金</td><td style="border-bottom:1px solid #ddd;">実残高</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">売掛金</td><td style="border-bottom:1px solid #ddd;">回収可能性</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">在庫</td><td style="border-bottom:1px solid #ddd;">処分価値</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">固定資産</td><td style="border-bottom:1px solid #ddd;">時価</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">借入</td><td style="border-bottom:1px solid #ddd;">実残高</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">税金</td><td style="border-bottom:1px solid #ddd;">未払</td></tr>
+          <tr><td style="border-bottom:1px solid #ddd; padding:2px;">原状回復</td><td style="border-bottom:1px solid #ddd;">見積</td></tr>
+        </table>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">② 利益分析</div>
+        <ul class="custom-list">
+          <li>過去推移</li>
+          <li>EBITDA</li>
+          <li>店舗別収益</li>
+          <li>修正利益 等</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">③ 客観査定</div>
+        <ul class="custom-list">
+          <li>厨房査定</li>
+          <li>内装査定</li>
+          <li>原状回復見積</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">④ 営業価値分析</div>
+        <ul class="custom-list">
+          <li>顧客継続</li>
+          <li>従業員継続</li>
+          <li>ブランド</li>
+          <li>立地 等</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-title">10. 実務上の“本当の株価”</h3>
+    <div class="p-4 rounded text-center mb-4" style="background-color: var(--color-primary); color: white;">
+      <div class="text-sm mb-1">中小企業M&Aでは通常：</div>
+      <div class="text-2xl font-bold">株式価値 = 企業価値 − 純有利子負債</div>
+    </div>
+    
+    <div class="grid-2">
+      <div>
+        <div class="font-bold mb-2">企業価値の算定方法</div>
+        <table class="comparison-table" style="margin-top:0;">
+          <thead>
+            <tr><th>方法</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-bold">DCF</td><td>将来利益</td></tr>
+            <tr><td class="font-bold">EBITDA倍率</td><td>利益倍率</td></tr>
+            <tr><td class="font-bold">時価純資産</td><td>清算価値</td></tr>
+            <tr><td class="font-bold">併用</td><td>実務では多い</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex-center">
+        <div class="info-card" style="border: 2px solid var(--color-warning); background: var(--color-warning-bg); width: 100%;">
+          <div class="info-card-title text-warning text-center">本件で重要なのは<br>「清算価値だけでよいのか？」という点</div>
+          <p class="text-sm mt-2">もし：</p>
+          <ul class="custom-list mb-2">
+            <li>営業継続可能</li>
+            <li>顧客価値あり</li>
+            <li>居抜き価値あり</li>
+          </ul>
+          <p class="text-base font-bold text-center" style="border-top: 1px dashed #ccc; padding-top: 0.5rem;">なら、<span class="text-warning">清算価値だけでは不足</span>となり得る。</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">11. 本件の実務感覚</h3>
+    <div class="balance-scale">
+      <div class="balance-side buyer">
+        <div class="balance-title text-buyer">譲受人側に有利<br><span class="text-sm font-normal">（低評価要因）</span></div>
+        <ul class="balance-list">
+          <li>赤字</li>
+          <li>飲食</li>
+          <li>老朽化</li>
+          <li>破綻接近</li>
+          <li>税務不透明</li>
+        </ul>
+        <div class="text-center mt-2 text-sm font-bold text-buyer">これは確かに低評価要因。</div>
+      </div>
+      <div class="balance-vs">VS</div>
+      <div class="balance-side trustee">
+        <div class="balance-title text-trustee">管財人側に有利<br><span class="text-sm font-normal">（増額要因）</span></div>
+        <ul class="balance-list">
+          <li>営業継続</li>
+          <li>顧客継続</li>
+          <li>居抜き価値</li>
+          <li>関係者取引</li>
+          <li>将来利益可能性</li>
+        </ul>
+        <div class="text-center mt-2 text-sm font-bold text-trustee">これは増額要因。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       12, 13, 14. 結論・まとめ
+  ========================================== -->
+  <div class="section-card">
+    <h2 class="section-title">12. この争いの“本当の核心”</h2>
+    <div class="text-center text-lg mb-4">本件は単なる会計論ではありません。実際には：</div>
+    <div class="p-4 rounded text-center text-2xl font-bold mb-6" style="background-color: var(--color-warning-bg); border: 2px solid var(--color-warning); color: #b45309;">
+      「会社には、債権者に配分すべき価値が残っていたのか」<br>
+      <span class="text-lg">という争いです。</span>
+    </div>
+
+    <h3 class="sub-title">13. 一言でまとめると</h3>
+    <div class="grid-2 mb-6">
+      <div class="info-card" style="border-left: 4px solid var(--color-buyer);">
+        <div class="font-bold text-sm text-buyer">報告書の主張</div>
+        <p>「会社価値は低く、250万円でも合理的」</p>
+      </div>
+      <div class="info-card" style="border-left: 4px solid var(--color-trustee);">
+        <div class="font-bold text-sm text-trustee">管財人の反論</div>
+        <p>「会社全体価値を過小評価している」</p>
+      </div>
+    </div>
+    <div class="text-center font-bold text-xl p-4 mb-6" style="background: #f1f5f9; border-radius: var(--radius-md);">
+      <span class="text-sm text-muted block mb-1">最大争点</span>
+      「株式譲渡なのに、事業譲渡的評価をしていないか」<br>ここです。
+    </div>
+
+    <h3 class="sub-title">14. 最終整理（重要）</h3>
+    <p class="text-base mb-4">この報告書は「低額譲渡にも合理性はある」という説明としては一定機能します。<br>しかし、<strong>「250万円が客観的市場価格だった」ことを強く立証するには弱い。</strong></p>
+    
+    <div class="info-card mb-4">
+      <div class="font-bold mb-2">特に不足している点：</div>
+      <div class="tag-container" style="justify-content: flex-start;">
+        <span class="tag">時価BS</span>
+        <span class="tag">継続企業価値分析</span>
+        <span class="tag">EBITDA分析</span>
+        <span class="tag">客観査定</span>
+        <span class="tag">第三者性立証</span>
+      </div>
+    </div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr><th>総合評価</th><th>内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="font-bold">実務感覚</td><td>一定合理性あり</td></tr>
+        <tr><td class="font-bold">会計評価</td><td>不十分な点多い</td></tr>
+        <tr><td class="font-bold text-warning">裁判耐性</td><td class="text-warning font-bold">やや弱い</td></tr>
+        <tr><td class="font-bold text-trustee">補強必要性</td><td class="text-trustee font-bold">高い</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==========================================
+       最後に（本質）
+  ========================================== -->
+  <div class="conclusion-box">
+    <h2 class="text-2xl font-bold text-center">最後に（本件の本質）</h2>
+    <p class="text-xl text-center mb-6">
+      本件は、<br>
+      <span style="color: #fbbf24; font-weight: bold; font-size: 1.5rem;">「破綻直前の中小企業に、本当に価値が残っていたのか」</span><br>
+      という極めて実務的な問題です。
+    </p>
+    
+    <div class="p-4" style="background-color: rgba(0,0,0,0.2); border-radius: var(--radius-md);">
+      <p class="text-lg text-center mb-4">
+        そして裁判では、<br>
+        <span class="text-2xl font-bold" style="color: #fff;">理論より、“当時第三者が実際にいくら払うか”</span><br>
+        が非常に重視されます。
+      </p>
+      
+      <p class="text-center text-sm mb-2">つまり、以下の“現実”が重要になります：</p>
+      <div class="tag-container" style="justify-content: center;">
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">実際の交渉</span>
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">継続実態</span>
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">リスク</span>
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">資金繰り</span>
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">居抜き価値</span>
+        <span class="tag" style="background: transparent; color: white; border-color: rgba(255,255,255,0.4);">買主動機</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
